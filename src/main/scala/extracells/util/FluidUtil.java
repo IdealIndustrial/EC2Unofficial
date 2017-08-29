@@ -8,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.*;
 import org.apache.commons.lang3.tuple.MutablePair;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.Loader;
 
 public class FluidUtil {
 
@@ -47,8 +49,13 @@ public class FluidUtil {
 			int amountDrained = content != null
 					&& content.getFluid() == fluid.getFluid() ? content.amount
 					: 0;
-			return new MutablePair<Integer, ItemStack>(amountDrained, itemStack
-					.getItem().getContainerItem(itemStack));
+			ItemStack emptyContainer = itemStack.getItem().getContainerItem(itemStack);
+			if  (emptyContainer == null && Loader.isModLoaded("IC2")) {
+				if (itemStack.getItem() == GameRegistry.findItem("IC2", "itemCellEmpty")) {
+					emptyContainer = new ItemStack(GameRegistry.findItem("IC2", "itemCellEmpty"), 1, 0);
+				}
+			}
+			return new MutablePair<Integer, ItemStack>(amountDrained, emptyContainer);
 		}
 
 		return null;
