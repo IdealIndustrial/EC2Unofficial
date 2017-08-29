@@ -44,6 +44,7 @@ public class ModelCertusTank extends ModelBase {
 					.getRenderFluid();
 			float scale = ((TileEntityCertusTank) tileEntity).getRenderScale();
 			if (storedFluid != null && scale > 0) {
+				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				Block id = Block.getBlockById(FluidRegistry.WATER.getID());
@@ -64,6 +65,7 @@ public class ModelCertusTank extends ModelBase {
 				renderer.renderFaceXNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(1.0F, 0.0F, 0.0F);
 				renderer.renderFaceXPos(id, x, y, z, fluidIcon);
+				GL11.glPopAttrib();
 			}
 		}
 	}
@@ -72,9 +74,10 @@ public class ModelCertusTank extends ModelBase {
 			RenderBlocks renderer, IBlockAccess world) {
 		Tessellator tessellator = Tessellator.instance;
 		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		tessellator.setBrightness(15728640);
+		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
 		boolean tankUp = world.getTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
 		boolean tankDown = world.getTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
 		int meta = 0;
@@ -101,6 +104,7 @@ public class ModelCertusTank extends ModelBase {
 		renderer.renderFaceXNeg(block, x + 0.875F, y, z, sideIcon);
 		tessellator.setNormal(1, 0, 0);
 		renderer.renderFaceXPos(block, x - 0.875F, y, z, sideIcon);
+		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
 
@@ -108,8 +112,10 @@ public class ModelCertusTank extends ModelBase {
 			RenderBlocks renderer, IBlockAccess world) {
 		Tessellator tessellator = Tessellator.instance;
 		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
 		boolean tankUp = world.getTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
 		boolean tankDown = world.getTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
 		int meta = 0;
@@ -137,6 +143,7 @@ public class ModelCertusTank extends ModelBase {
 		renderer.renderFaceXNeg(block, x, y, z, sideIcon);
 		tessellator.setNormal(1.0F, 0.0F, 0.0F);
 		renderer.renderFaceXPos(block, x, y, z, sideIcon);
+		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
 
