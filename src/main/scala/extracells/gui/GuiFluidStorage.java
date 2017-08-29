@@ -164,18 +164,14 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
 		this.searchbar = new GuiTextField(this.fontRendererObj,
 				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
-
-			private int xPos = 0;
-			private int yPos = 0;
-			private int width = 0;
-			private int height = 0;
-
 			@Override
 			public void mouseClicked(int x, int y, int mouseBtn) {
-				boolean flag = x >= this.xPos && x < this.xPos + this.width
-						&& y >= this.yPos && y < this.yPos + this.height;
-				if (flag && mouseBtn == 3)
-					setText("");
+				boolean withinXRange = this.xPosition <= x && x < this.xPosition + this.width;
+				boolean withinYRange = this.yPosition <= y && y < this.yPosition + this.height;
+				boolean flag = withinXRange && withinYRange;
+				if (flag && mouseBtn == 1) {
+					this.setText("");
+				}
 			}
 		};
 		this.searchbar.setEnableBackgroundDrawing(false);
@@ -205,6 +201,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 				}
 			}
 		}
+		updateFluids();
 	}
 
 	public void updateFluids() {
