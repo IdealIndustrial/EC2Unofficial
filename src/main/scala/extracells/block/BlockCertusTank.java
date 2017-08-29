@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.Loader;
 
 public class BlockCertusTank extends BlockEC {
 
@@ -152,11 +154,17 @@ public class BlockCertusTank extends BlockEC {
 
 				if (amountFilled != 0
 						&& !entityplayer.capabilities.isCreativeMode) {
+					ItemStack emptyContainer = current.getItem().getContainerItem(current);
+					if  (emptyContainer == null && Loader.isModLoaded("IC2")) {
+						if (current.getItem() == GameRegistry.findItem("IC2", "itemCellEmpty")) {
+							emptyContainer = new ItemStack(GameRegistry.findItem("IC2", "itemCellEmpty"), 1, 0);
+						}
+					}
 					if (current.stackSize > 1) {
 						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
-						entityplayer.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
+						entityplayer.inventory.addItemStackToInventory(emptyContainer);
 					} else {
-						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = current.getItem().getContainerItem(current);
+						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = emptyContainer;
 					}
 				}
 
