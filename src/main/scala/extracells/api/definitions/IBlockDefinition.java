@@ -11,6 +11,4 @@ public interface IBlockDefinition {
 	ITileDefinition fluidCrafter();
 
 	ITileDefinition fluidFiller();
-
-	ITileDefinition walrus();
 }
