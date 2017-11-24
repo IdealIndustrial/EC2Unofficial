@@ -12,6 +12,7 @@ import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +36,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
 	private ContainerFluidTerminal containerTerminalFluid;
+	private int sortingMethod;
 
 	public GuiFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player) {
 		super(new ContainerFluidTerminal(_terminal, _player));
@@ -44,6 +46,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 		this.player = _player;
 		this.xSize = 176;
 		this.ySize = 204;
+		this.sortingMethod = 0;
 		new PacketFluidTerminal(this.player, this.terminal).sendPacketToServer();
 	}
 
@@ -150,9 +153,14 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	public void initGui() {
 		super.initGui();
 		Mouse.getDWheel();
-
+		
+		this.buttonList.clear();
+		this.buttonList.add(new GuiButton(0, this.guiLeft-30, this.guiTop, 30, 20, "A..z"));
+		this.buttonList.add(new GuiButton(1, this.guiLeft-30, this.guiTop+20, 30, 20, "z..A"));
+		this.buttonList.add(new GuiButton(2, this.guiLeft-30, this.guiTop+40, 30, 20, "1..9"));
+		this.buttonList.add(new GuiButton(3, this.guiLeft-30, this.guiTop+60, 30, 20, "9..1"));
+		
 		updateFluids();
-		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
 		this.searchbar = new GuiTextField(this.fontRendererObj,
 				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 			@Override
@@ -168,6 +176,24 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 		this.searchbar.setEnableBackgroundDrawing(false);
 		this.searchbar.setFocused(true);
 		this.searchbar.setMaxStringLength(15);
+	}
+	
+	@Override
+	public void actionPerformed(GuiButton button) {
+		switch (button.id) {
+		case 0:
+			this.sortingMethod = 0;
+			break;
+		case 1:
+			this.sortingMethod = 1;
+			break;
+		case 2:
+			this.sortingMethod = 2;
+			break;
+		case 3:
+			this.sortingMethod = 3;
+			break;
+		}
 	}
 
 	@Override
@@ -204,6 +230,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 			}
 		}
 		updateSelectedFluid();
+		Collections.sort(this.fluidWidgets, new FluidWidgetComparator(this.sortingMethod));
 	}
 
 	public void updateSelectedFluid() {
