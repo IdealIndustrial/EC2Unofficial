@@ -7,21 +7,21 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.Comparator;
 
 public class FluidWidgetComparator implements Comparator<AbstractFluidWidget> {
-	private int sortingMethod;
+	private int sortingOrder;
 	
 	public FluidWidgetComparator() {
 		super();
-		this.sortingMethod = 0;
+		this.sortingOrder = 0;
 	}
 	
-	public FluidWidgetComparator(int _sortingMethod) {
+	public FluidWidgetComparator(int _sortingOrder) {
 		super();
-		this.sortingMethod = _sortingMethod;
+		this.sortingOrder = _sortingOrder;
 	}
 	
 	@Override
 	public int compare(AbstractFluidWidget o1, AbstractFluidWidget o2) {
-		switch(this.sortingMethod) {
+		switch(this.sortingOrder) {
 		case 0:
 			return o1.getFluid().getLocalizedName(new FluidStack(o1.getFluid(), 0))
 				.compareTo(o2.getFluid().getLocalizedName(new FluidStack(o2.getFluid(), 0)));

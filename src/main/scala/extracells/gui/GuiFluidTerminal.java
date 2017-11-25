@@ -25,6 +25,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.text.DecimalFormat;
 
 public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui {
 
@@ -36,7 +37,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
 	private ContainerFluidTerminal containerTerminalFluid;
-	private int sortingMethod;
+	private int sortingOrder;
 
 	public GuiFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player) {
 		super(new ContainerFluidTerminal(_terminal, _player));
@@ -46,7 +47,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 		this.player = _player;
 		this.xSize = 176;
 		this.ySize = 204;
-		this.sortingMethod = 0;
+		this.sortingOrder = 0;
 		new PacketFluidTerminal(this.player, this.terminal).sendPacketToServer();
 	}
 
@@ -67,13 +68,13 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 			long currentFluidAmount = this.currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
 			if (Extracells.shortenedBuckets()) {
+				DecimalFormat df = new DecimalFormat("0.###");
 				if (currentFluidAmount > 1000000000L)
-					amountToText = Long
-							.toString(currentFluidAmount / 1000000000L) + "MegaB";
+					amountToText = df.format(currentFluidAmount / 1000000000f) + "MegaB";
 				else if (currentFluidAmount > 1000000L)
-					amountToText = Long.toString(currentFluidAmount / 1000000L) + "KiloB";
+					amountToText = df.format(currentFluidAmount / 1000000f) + "KiloB";
 				else if (currentFluidAmount > 9999L) {
-					amountToText = Long.toString(currentFluidAmount / 1000L) + "B";
+					amountToText = df.format(currentFluidAmount / 1000f) + "B";
 				}
 			}
 
@@ -182,16 +183,16 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	public void actionPerformed(GuiButton button) {
 		switch (button.id) {
 		case 0:
-			this.sortingMethod = 0;
+			this.sortingOrder = 0;
 			break;
 		case 1:
-			this.sortingMethod = 1;
+			this.sortingOrder = 1;
 			break;
 		case 2:
-			this.sortingMethod = 2;
+			this.sortingOrder = 2;
 			break;
 		case 3:
-			this.sortingMethod = 3;
+			this.sortingOrder = 3;
 			break;
 		}
 	}
@@ -230,7 +231,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 			}
 		}
 		updateSelectedFluid();
-		Collections.sort(this.fluidWidgets, new FluidWidgetComparator(this.sortingMethod));
+		Collections.sort(this.fluidWidgets, new FluidWidgetComparator(this.sortingOrder));
 	}
 
 	public void updateSelectedFluid() {

@@ -11,6 +11,7 @@ import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidStorage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +24,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.text.DecimalFormat;
 
 public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
@@ -35,6 +37,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 	public IAEFluidStack currentFluid;
 	private ContainerFluidStorage containerFluidStorage;
 	private final String guiName;
+	private int sortingOrder;
 
 	public GuiFluidStorage(EntityPlayer _player, String _guiName) {
 		super(new ContainerFluidStorage(_player));
@@ -68,15 +71,15 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 			long currentFluidAmount = this.currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
 			if (Extracells.shortenedBuckets()) {
+				DecimalFormat df = new DecimalFormat("0.###");
 				if (currentFluidAmount > 1000000000L)
-					amountToText = Long
-							.toString(currentFluidAmount / 1000000000L)
+					amountToText = df.format(currentFluidAmount / 1000000000f)
 							+ "MegaB";
 				else if (currentFluidAmount > 1000000L)
-					amountToText = Long.toString(currentFluidAmount / 1000000L)
+					amountToText = df.format(currentFluidAmount / 1000000f)
 							+ "KiloB";
 				else if (currentFluidAmount > 9999L) {
-					amountToText = Long.toString(currentFluidAmount / 1000L)
+					amountToText = df.format(currentFluidAmount / 1000f)
 							+ "B";
 				}
 			}
@@ -160,8 +163,13 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 		super.initGui();
 		Mouse.getDWheel();
 
+		this.buttonList.clear();
+		this.buttonList.add(new GuiButton(0, this.guiLeft-30, this.guiTop, 30, 20, "A..z"));
+		this.buttonList.add(new GuiButton(1, this.guiLeft-30, this.guiTop+20, 30, 20, "z..A"));
+		this.buttonList.add(new GuiButton(2, this.guiLeft-30, this.guiTop+40, 30, 20, "1..9"));
+		this.buttonList.add(new GuiButton(3, this.guiLeft-30, this.guiTop+60, 30, 20, "9..1"));
+		
 		updateFluids();
-		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
 		this.searchbar = new GuiTextField(this.fontRendererObj,
 				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 			@Override
@@ -177,6 +185,24 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 		this.searchbar.setEnableBackgroundDrawing(false);
 		this.searchbar.setFocused(true);
 		this.searchbar.setMaxStringLength(15);
+	}
+	
+	@Override
+	public void actionPerformed(GuiButton button) {
+		switch (button.id) {
+		case 0:
+			this.sortingOrder = 0;
+			break;
+		case 1:
+			this.sortingOrder = 1;
+			break;
+		case 2:
+			this.sortingOrder = 2;
+			break;
+		case 3:
+			this.sortingOrder = 3;
+			break;
+		}
 	}
 
 	@Override
@@ -218,6 +244,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 			}
 		}
 		updateSelectedFluid();
+		Collections.sort(this.fluidWidgets, new FluidWidgetComparator(this.sortingOrder));
 	}
 
 	public void updateSelectedFluid() {

@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DecimalFormat;
 
 public class WidgetFluidSelector extends AbstractFluidWidget {
 
@@ -53,13 +54,14 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 
 		String amountToText = Long.toString(this.amount) + "mB";
 		if (Extracells.shortenedBuckets()) {
+			DecimalFormat df = new DecimalFormat("0.###");
 			if (this.amount > 1000000000L)
-				amountToText = Long.toString(this.amount / 1000000000L)
+				amountToText = df.format(this.amount / 1000000000f)
 						+ "MegaB";
 			else if (this.amount > 1000000L)
-				amountToText = Long.toString(this.amount / 1000000L) + "KiloB";
+				amountToText = df.format(this.amount / 1000000f) + "KiloB";
 			else if (this.amount > 9999L) {
-				amountToText = Long.toString(this.amount / 1000L) + "B";
+				amountToText = df.format(this.amount / 1000f) + "B";
 			}
 		}
 
