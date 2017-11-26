@@ -32,11 +32,4 @@ public class BlockDefinition implements IBlockDefinition {
 		return new BlockItemDefinitions(BlockEnum.FLUIDCRAFTER.getBlock(), 1,
 				TileEntityFluidFiller.class);
 	}
-
-	@Override
-	public ITileDefinition walrus() {
-		return new BlockItemDefinitions(BlockEnum.WALRUS.getBlock(),
-				TileEntityWalrus.class);
-	}
-
 }

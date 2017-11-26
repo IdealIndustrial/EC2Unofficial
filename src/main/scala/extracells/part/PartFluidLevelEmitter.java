@@ -196,6 +196,9 @@ public class PartFluidLevelEmitter extends PartECBase implements
 	}
 
 		void updateCurrentAmount() {
+=======
+	void updateCurrentAmount() {
+>>>>>>> pr/2
 		IGridNode n = getGridNode();
 		if (n == null) return;
 		IGrid g = n.getGrid();
@@ -215,6 +218,9 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		if (h != null) h.markForUpdate();
 	}
 	
+=======
+
+>>>>>>> pr/2
 	@Override
 	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
 		this.fluid = _fluid;
@@ -226,6 +232,9 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		new PacketFluidSlot(Lists.newArrayList(this.fluid))
 				.sendPacketToPlayer(_player);
 				notifyTargetBlock(getHostTile(), getSide());
+=======
+		notifyTargetBlock(getHostTile(), getSide());
+>>>>>>> pr/2
 		saveData();
 	}
 
@@ -237,6 +246,12 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		IPartHost h = getHost();
 		if (h != null) h.markForUpdate();
 		
+=======
+
+		IPartHost h = getHost();
+		if (h != null) h.markForUpdate();
+
+>>>>>>> pr/2
 		new PacketFluidEmitter(this.wantedAmount, player)
 				.sendPacketToPlayer(player);
 		notifyTargetBlock(getHostTile(), getSide());
@@ -264,6 +279,9 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		IPartHost h = getHost();
 		if (h != null) h.markForUpdate();
 		
+=======
+
+>>>>>>> pr/2
 		new PacketFluidEmitter(this.mode, player).sendPacketToPlayer(player);
 		notifyTargetBlock(getHostTile(), getSide());
 		saveData();
