@@ -26,12 +26,6 @@ shapeless=
 	-> ec:interface
 
 shaped=
-    mc:fish mc:fish mc:fish,
-    mc:fish _ mc:fish,
-    mc:fish mc:fish mc:fish
-    -> ec:walrus
-
-shaped=
 	ae2:ItemMaterial.Wireless,
 	ec:partFluidTerminal,
 	ae2:BlockDenseEnergyCell
