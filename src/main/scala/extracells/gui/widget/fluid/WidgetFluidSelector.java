@@ -87,8 +87,10 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		Fluid currentFluid = terminalFluid != null ? terminalFluid.getFluid()
 				: null;
 		if (this.fluid != null && this.fluid.getIcon() != null)
+		GL11.glColor3f((this.fluid.getColor() >> 16 & 0xFF) / 255.0F, (this.fluid.getColor() >> 8 & 0xFF) / 255.0F, (this.fluid.getColor() & 0xFF) / 255.0F);
 			drawTexturedModelRectFromIcon(posX + 1, posY + 1,
 					this.fluid.getIcon(), this.height - 2, this.width - 2);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);			
 		if (this.fluid == currentFluid)
 			drawHollowRectWithCorners(posX, posY, this.height, this.width,
 					this.color, this.borderThickness);

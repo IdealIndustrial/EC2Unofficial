@@ -84,6 +84,13 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		this.fluidSlot.drawWidget();
 		((WidgetRedstoneModes) this.buttonList.get(6)).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
 		GuiUtil.renderOverlay(this.zLevel, this.guiLeft, this.guiTop, this.fluidSlot, mouseX, mouseY);
+		
+		if (fluidSlot != null)
+			if (func_146978_c(fluidSlot.getPosX(), fluidSlot.getPosY(), 16, 16, mouseX, mouseY)) {
+					fluidSlot.drawTooltip(mouseX - this.guiLeft, mouseY
+							- this.guiTop);
+			}
+		
 	}
 
 	@Override
