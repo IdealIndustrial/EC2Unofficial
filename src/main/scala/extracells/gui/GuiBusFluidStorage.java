@@ -109,6 +109,13 @@ public class GuiBusFluidStorage extends GuiContainer implements
 			if (button instanceof WidgetStorageDirection)
 				((WidgetStorageDirection) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
 		}
+		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
+			if (fluidSlot != null)
+				if (func_146978_c(fluidSlot.getPosX(), fluidSlot.getPosY(), 16, 16, mouseX, mouseY)) {
+					fluidSlot.drawTooltip(mouseX - this.guiLeft, mouseY
+							- this.guiTop);
+				}
+		}
 	}
 
 	@Override

@@ -80,10 +80,10 @@ public class GuiFluidInterface extends GuiContainer {
 		for (WidgetFluidTank tank : this.tanks) {
 			if (tank != null)
 				if (func_146978_c(tank.posX, tank.posY, 18, 73, mouseX, mouseY)) {
-					tank.drawDirectionTooltip(mouseX - this.guiLeft, mouseY
+					tank.drawTooltip(mouseX - this.guiLeft, mouseY
 							- this.guiTop);
 				}
-		}
+		}	
 		for (WidgetFluidSlot fluidSlot : this.filter) {
 			if (fluidSlot != null) {
 				int i = fluidSlot.getPosX() + 1;
@@ -94,6 +94,13 @@ public class GuiFluidInterface extends GuiContainer {
 					break;
 				}
 			}
+		}
+		for (WidgetFluidSlot fluidSlot : this.filter) {
+			if (fluidSlot != null)
+				if (func_146978_c(fluidSlot.getPosX(), fluidSlot.getPosY(), 16, 16, mouseX, mouseY)) {
+					fluidSlot.drawTooltip(mouseX - this.guiLeft, mouseY
+							- this.guiTop);
+				}
 		}
 		for (Object s : this.inventorySlots.inventorySlots) {
 			try {

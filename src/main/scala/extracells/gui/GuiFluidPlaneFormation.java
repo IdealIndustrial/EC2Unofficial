@@ -70,6 +70,12 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 						this.guiTop, (this.width - this.xSize) / 2,
 						(this.height - this.ySize) / 2);
 		}
+		
+		if (fluidSlot != null)
+			if (func_146978_c(fluidSlot.getPosX(), fluidSlot.getPosY(), 16, 16, mouseX, mouseY)) {
+					fluidSlot.drawTooltip(mouseX - this.guiLeft, mouseY
+							- this.guiTop);
+		}				
 	}
 
 	protected Slot getSlotAtPosition(int p_146975_1_, int p_146975_2_) {
