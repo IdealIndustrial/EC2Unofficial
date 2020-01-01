@@ -39,9 +39,9 @@ buildProps.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "1.0.0-universal"
+version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}b" + getBuildNumber()
 group = "extracells"
-archivesBaseName = "GWPP-ExtraCells"
+archivesBaseName = "ExtraCells"
 def actualVersion = version
 
 logger.lifecycle "$archivesBaseName-$version"
