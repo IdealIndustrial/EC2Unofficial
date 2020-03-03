@@ -170,13 +170,13 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
                 boolean withinXRange = this.xPosition <= x && x < this.xPosition + this.width;
                 boolean withinYRange = this.yPosition <= y && y < this.yPosition + this.height;
                 boolean flag = withinXRange && withinYRange;
-                if (flag && mouseBtn == 1) {
-                    this.setText("");
+                if (flag && mouseBtn == 1) this.setText("");
+                if (flag) this.setFocused(true);
+                else this.setFocused(false);
                 }
             }
         };
         this.searchbar.setEnableBackgroundDrawing(false);
-        this.searchbar.setFocused(true);
         this.searchbar.setMaxStringLength(15);
     }
 
@@ -200,8 +200,8 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
     @Override
     protected void keyTyped(char key, int keyID) {
-        if (keyID == Keyboard.KEY_ESCAPE)
-            this.mc.thePlayer.closeScreen();
+        if (keyID == Keyboard.KEY_ESCAPE) this.mc.thePlayer.closeScreen();
+        if (!this.searchbar.isFocused() && keyID == Keyboard.KEY_E ) this.mc.thePlayer.closeScreen();
         this.searchbar.textboxKeyTyped(key, keyID);
         updateFluids();
     }
