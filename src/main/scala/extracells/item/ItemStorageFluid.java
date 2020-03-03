@@ -32,7 +32,7 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 
 	public static final String[] suffixes = { "1k", "4k", "16k", "64k", "256k", "1024k", "4096k" };
 
-	public static final int[] spaces = { 1024, 4096, 16348, 65536, 262144, 1048576, 4194304 };
+	public static final int[] spaces = { 1024, 4096, 16348, 65536, 262144, 1048576, 2147483 };
 
 	private IIcon[] icons;
 
@@ -54,11 +54,10 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 		boolean partitioned = cellHandler.isFormatted();
 		long usedBytes = cellHandler.usedBytes();
 
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 1000, cellHandler.totalBytes() / 1000));
 		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
-		if (usedBytes != 0) {
-			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes));
-		}
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes, cellHandler.totalBytes()));
+
 
 		if (partitioned) {
 			list.add(StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + StatCollector.translateToLocal("gui.appliedenergistics2.Precise"));
@@ -112,7 +111,7 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 
 	@Override
 	public int getMaxTypes(ItemStack unused) {
-		return 5;
+		return 10;
 	}
 
 	@Override
