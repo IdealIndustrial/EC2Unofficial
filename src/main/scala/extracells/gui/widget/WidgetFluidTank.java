@@ -155,7 +155,7 @@ public class WidgetFluidTank extends Gui {
 	public void drawDirectionTooltip(int x, int y) {
 
 		EnumChatFormatting color = this.direction.ordinal() == 0? RED : this.direction.ordinal() == 1? YELLOW: this.direction.ordinal() == 2? BLUE
-				: this.direction.ordinal() == 3? GREEN: this.direction.ordinal() == 4? BLACK: this.direction.ordinal() == 5? GRAY : WHITE ;
+				: this.direction.ordinal() == 3? GREEN: this.direction.ordinal() == 4? WHITE: GRAY;
 		List<String> description = new ArrayList<String>();
 		description.add(color + translateToLocal("extracells.tooltip.direction." + this.direction.ordinal() ) );
 
