@@ -1,9 +1,15 @@
 buildscript {
     repositories {
         mavenCentral()
+
+        maven {
+            name = "MavenRepo"
+            url = "https://repo.maven.apache.org/maven2"
+        }
+
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://files.minecraftforge.net/maven"
         }
         maven {
             name = "sonatype"
@@ -16,12 +22,14 @@ buildscript {
 }
 
 
+
+
 apply plugin: 'scala'
 apply plugin: 'forge'
 apply plugin: 'idea'
 
-sourceCompatibility = JavaVersion.VERSION_1_6
-targetCompatibility = JavaVersion.VERSION_1_6
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 ext.buildProps = file "build.properties"
 
@@ -39,7 +47,7 @@ buildProps.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}b" + getBuildNumber()
+version = "${config.version.extracells}"
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
@@ -55,7 +63,7 @@ minecraft {
 repositories {
     maven {
         name 'Mobius Repo'
-        url "http://mobiusstrip.eu/maven"
+        url "https://mobiusstrip.eu/maven"
     }
     maven {
         name 'CB Repo'
@@ -63,29 +71,18 @@ repositories {
     }
 	
 	maven {
-		name 'Open Computers'
-		url "http://maven.cil.li/"
-	}
-	
-	maven {
         name = 'IGW'
-        url = "http://maven.k-4u.nl/"
+        url = "https://maven.k-4u.nl/"
     }
 
     ivy {
         name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+        artifactPattern "https://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
-	
-	ivy { 
-		name 'WirelessCraftingTerminal' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.wc}/[module]-[revision].[ext]" 
-	} 
-
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
+	/*compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
         transitive = false
 	}
 	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
@@ -93,16 +90,27 @@ dependencies {
 	}
 	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
-	}
-	compile "li.cil.oc:OpenComputers:${config.version.oc}:dev"
+	}*/
 	compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
     compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
     compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
 	compile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:userdev"
 
     compile name: "buildcraft", version: "${config.version.bc}", classifier: "dev", ext: 'jar'
+
+    compile files("libs/WirelessCraftingTerminal-1.7.10-rv3-1.8.7.4-bigbass-1.jar")
+
+	compile files("libs/thaumicenergistics-1.1.3.0.jar")
+	compile files("libs/OpenComputers-MC1.7.10-1.5.22.46-universal.jar")
+		compile files("libs/appliedenergistics2-rv3-beta-6.jar")
+	compile files("libs/Thaumcraft-1.7.10-4.2.3.5.jar.jar")	
+
+
+
+
+
 	
-	compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
+	/*compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'*/
 }
 
 processResources {
