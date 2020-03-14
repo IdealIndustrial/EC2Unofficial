@@ -42,6 +42,8 @@ import java.util.List;
 public class PartFluidTerminal extends PartECBase implements IGridTickable,
 		IInventoryUpdateReceiver {
 
+	public int sortingOrder = 0;
+
 	protected Fluid currentFluid;
 	private List<Object> containers = new ArrayList<Object>();
 	protected ECPrivateInventory inventory = new ECPrivateInventory(
