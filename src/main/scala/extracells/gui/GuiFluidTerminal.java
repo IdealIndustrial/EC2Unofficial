@@ -157,10 +157,10 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         Mouse.getDWheel();
 
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(0, this.guiLeft - 30, this.guiTop, 30, 20, "A..z"));
-        this.buttonList.add(new GuiButton(1, this.guiLeft - 30, this.guiTop + 20, 30, 20, "z..A"));
-        this.buttonList.add(new GuiButton(2, this.guiLeft - 30, this.guiTop + 40, 30, 20, "1..9"));
-        this.buttonList.add(new GuiButton(3, this.guiLeft - 30, this.guiTop + 60, 30, 20, "9..1"));
+        this.buttonList.add(new GuiButton(0, this.guiLeft - 30, this.guiTop, 30, 20, "9..1"));
+        this.buttonList.add(new GuiButton(1, this.guiLeft - 30, this.guiTop + 20, 30, 20, "1..9"));
+        this.buttonList.add(new GuiButton(2, this.guiLeft - 30, this.guiTop + 40, 30, 20, "A..z"));
+        this.buttonList.add(new GuiButton(3, this.guiLeft - 30, this.guiTop + 60, 30, 20, "z..A"));
 
         updateFluids();
         this.searchbar = new GuiTextField(this.fontRendererObj,
@@ -170,13 +170,13 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
                 boolean withinXRange = this.xPosition <= x && x < this.xPosition + this.width;
                 boolean withinYRange = this.yPosition <= y && y < this.yPosition + this.height;
                 boolean flag = withinXRange && withinYRange;
-                if (flag && mouseBtn == 1) {
-                    this.setText("");
+                if (flag && mouseBtn == 1) this.setText("");
+                if (flag) this.setFocused(true);
+                else this.setFocused(false);
                 }
             }
         };
         this.searchbar.setEnableBackgroundDrawing(false);
-        this.searchbar.setFocused(true);
         this.searchbar.setMaxStringLength(15);
     }
 
@@ -200,8 +200,8 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
     @Override
     protected void keyTyped(char key, int keyID) {
-        if (keyID == Keyboard.KEY_ESCAPE)
-            this.mc.thePlayer.closeScreen();
+        if (keyID == Keyboard.KEY_ESCAPE) this.mc.thePlayer.closeScreen();
+        if (!this.searchbar.isFocused() && keyID == Keyboard.KEY_E ) this.mc.thePlayer.closeScreen();
         this.searchbar.textboxKeyTyped(key, keyID);
         updateFluids();
     }
