@@ -100,7 +100,7 @@ dependencies {
 
 	compile files("libs/thaumicenergistics-1.1.3.0.jar")
 	compile files("libs/OpenComputers-MC1.7.10-1.5.22.46-universal.jar")
-		compile files("libs/appliedenergistics2-rv3-beta-6.jar")
+	compile files("libs/appliedenergistics2-rv3-beta-6.jar")
 	compile files("libs/Thaumcraft-1.7.10-4.2.3.5.jar.jar")	
 
 
