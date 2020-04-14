@@ -6,7 +6,7 @@ import extracells.item.ItemOCUpgrade
 import li.cil.oc.api.Driver
 object OpenComputers {
 	
-	def init{
+	def init(){
 		Driver.add(new DriverFluidExportBus)
 		Driver.add(new DriverOreDictExportBus)
 		Driver.add(new DriverFluidInterface)
@@ -16,7 +16,7 @@ object OpenComputers {
 		}
 		Driver.add(ItemOCUpgrade)
 		AEApi.instance.registries.wireless.registerWirelessHandler(WirelessHandlerUpgradeAE)
-		OCRecipes.loadRecipes
+		OCRecipes.loadRecipes()
 		ExtraCellsPathProvider
 	}
 

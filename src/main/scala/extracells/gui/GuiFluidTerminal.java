@@ -39,7 +39,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
     private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
     public IAEFluidStack currentFluid;
     private ContainerFluidTerminal containerTerminalFluid;
-    private int sortingOrder;
+  //  private int sortingOrder;
 
     public GuiFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player) {
         super(new ContainerFluidTerminal(_terminal, _player));
@@ -49,7 +49,6 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         this.player = _player;
         this.xSize = 176;
         this.ySize = 204;
-        this.sortingOrder = 0;
         new PacketFluidTerminal(this.player, this.terminal).sendPacketToServer();
     }
 
@@ -165,9 +164,6 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         this.buttonList.add(new GuiButton(2, this.guiLeft - 30, this.guiTop + 40, 30, 20, "A..z"));
         this.buttonList.add(new GuiButton(3, this.guiLeft - 30, this.guiTop + 60, 30, 20, "z..A"));
 
-
-
-
         updateFluids();
         this.searchbar = new GuiTextField(this.fontRendererObj,
                 this.guiLeft + 81, this.guiTop + 6, 88, 10) {
@@ -176,6 +172,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
                 boolean withinXRange = this.xPosition <= x && x < this.xPosition + this.width;
                 boolean withinYRange = this.yPosition <= y && y < this.yPosition + this.height;
                 boolean flag = withinXRange && withinYRange;
+              
                 if (flag && mouseBtn == 1) this.setText("");
 
                 if (flag) this.setFocused(true);
@@ -183,7 +180,6 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
             }
         };
         this.searchbar.setEnableBackgroundDrawing(false);
-
         this.searchbar.setMaxStringLength(15);
     }
 
@@ -191,16 +187,16 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
     public void actionPerformed(GuiButton button) {
         switch (button.id) {
             case 0:
-                this.sortingOrder = 0;
+                this.terminal.sortingOrder = 0;
                 break;
             case 1:
-                this.sortingOrder = 1;
+                this.terminal.sortingOrder = 1;
                 break;
             case 2:
-                this.sortingOrder = 2;
+                this.terminal.sortingOrder = 2;
                 break;
             case 3:
-                this.sortingOrder = 3;
+                this.terminal.sortingOrder = 3;
                 break;
         }
     }
@@ -211,9 +207,6 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         if (keyID == Keyboard.KEY_ESCAPE) this.mc.thePlayer.closeScreen();
         if (!this.searchbar.isFocused() && keyID == Keyboard.KEY_E ) this.mc.thePlayer.closeScreen();
         if (keyID == Keyboard.KEY_RETURN) this.searchbar.setFocused(false);
-        //if ( && keyID == Keyboard.KEY_RETURN) this.searchbar.setFocused(false);
-
-        //if (keyID == Keyboard.KEY_RETURN) this.searchbar.setFocused(false);
         this.searchbar.textboxKeyTyped(key, keyID);
         updateFluids();
     }
@@ -244,7 +237,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
             }
         }
         updateSelectedFluid();
-        Collections.sort(this.fluidWidgets, new FluidWidgetComparator(this.sortingOrder));
+        Collections.sort(this.fluidWidgets, new FluidWidgetComparator(this.terminal.sortingOrder));
     }
 
     public void updateSelectedFluid() {
