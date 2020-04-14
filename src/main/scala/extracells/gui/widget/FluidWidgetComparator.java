@@ -33,6 +33,6 @@ public class FluidWidgetComparator implements Comparator<AbstractFluidWidget> {
 			return o2.getFluid().getLocalizedName(new FluidStack(o2.getFluid(), 0))
 					.compareTo(o1.getFluid().getLocalizedName(new FluidStack(o1.getFluid(), 0)));
 		}
-	return 0;
+		return 0;
 	}
 }

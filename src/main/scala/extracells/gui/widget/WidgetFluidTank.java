@@ -5,6 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -17,6 +18,9 @@ import org.lwjgl.opengl.GL12;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.StatCollector.translateToLocal;
 
 public class WidgetFluidTank extends Gui {
 
@@ -150,18 +154,17 @@ public class WidgetFluidTank extends Gui {
 
 	public void drawDirectionTooltip(int x, int y) {
 
+		EnumChatFormatting color = this.direction.ordinal() == 0? RED : this.direction.ordinal() == 1? YELLOW: this.direction.ordinal() == 2? BLUE
+				: this.direction.ordinal() == 3? GREEN: this.direction.ordinal() == 4? WHITE: GRAY;
 		List<String> description = new ArrayList<String>();
-		description.add(StatCollector
-				.translateToLocal("extracells.tooltip.direction."
-						+ this.direction.ordinal()));
+		description.add(color + translateToLocal("extracells.tooltip.direction." + this.direction.ordinal() ) );
 
 		if (this.tank == null || this.tank.getFluid() == null) {
-			description.add(StatCollector
-					.translateToLocal("extracells.tooltip.empty1"));
+			description.add(translateToLocal("extracells.tooltip.empty1"));
 		} else {
 			if (this.tank.getFluid().amount > 0
 					&& this.tank.getFluid().getFluid() != null) {
-				String amountToText = this.tank.getFluid().amount + "mB";
+				String amountToText = this.tank.getFluid().amount + "L";
 
 				description.add(this.tank.getFluid().getFluid()
 						.getLocalizedName(this.tank.getFluid()));
@@ -177,12 +180,11 @@ public class WidgetFluidTank extends Gui {
 		List<String> description = new ArrayList<String>();
 
 		if (this.tank == null || this.tank.getFluid() == null) {
-			description.add(StatCollector
-					.translateToLocal("extracells.tooltip.empty1"));
+			description.add(translateToLocal("extracells.tooltip.empty1"));
 		} else {
 			if (this.tank.getFluid().amount > 0
 					&& this.tank.getFluid().getFluid() != null) {
-				String amountToText = this.tank.getFluid().amount + "mB";
+				String amountToText = this.tank.getFluid().amount + "L";
 
 				description.add(this.tank.getFluid().getFluid()
 						.getLocalizedName(this.tank.getFluid()));

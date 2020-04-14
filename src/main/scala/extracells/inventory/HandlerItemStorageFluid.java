@@ -37,7 +37,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (!_storageStack.hasTagCompound()) _storageStack.setTagCompound(new NBTTagCompound());
 		this.stackTag = _storageStack.getTagCompound();
 		this.totalTypes = ((IFluidStorageCell) _storageStack.getItem()).getMaxTypes(_storageStack);
-		this.totalBytes = ((IFluidStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack) * 250;
+		this.totalBytes = ((IFluidStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack) * 1000;
 
 		for (int i = 0; i < this.totalTypes; i++)
 			this.fluidStacks.add(FluidStack.loadFluidStackFromNBT(this.stackTag.getCompoundTag("Fluid#" + i)));

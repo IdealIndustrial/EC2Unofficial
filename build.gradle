@@ -89,6 +89,7 @@ dependencies {
 	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
 	}*/
+  
 	compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
     compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
     compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"

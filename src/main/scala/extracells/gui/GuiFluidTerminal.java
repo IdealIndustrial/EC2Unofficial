@@ -1,6 +1,8 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.client.gui.widgets.GuiTabButton;
+import appeng.client.gui.widgets.ITooltip;
 import extracells.Extracells;
 import extracells.api.ECApi;
 import extracells.container.ContainerFluidTerminal;
@@ -65,7 +67,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         drawWidgets(mouseX, mouseY);
         if (this.currentFluid != null) {
             long currentFluidAmount = this.currentFluid.getStackSize();
-            String amountToText = Long.toString(currentFluidAmount) + "mB";
+            String amountToText = Long.toString(currentFluidAmount) + "L";
             if (Extracells.shortenedBuckets()) {
                 DecimalFormat df = new DecimalFormat("0.###");
                 if (currentFluidAmount > 1000000000L)
@@ -73,12 +75,12 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
                 else if (currentFluidAmount > 1000000L)
                     amountToText = df.format(currentFluidAmount / 1000000f) + "KiloB";
                 else if (currentFluidAmount > 9999L) {
-                    amountToText = df.format(currentFluidAmount / 1000f) + "B";
+                    amountToText = df.format(currentFluidAmount / 1000f) + "L";
                 }
             }
 
             this.fontRendererObj.drawString(
-                    StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
+                    StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + Long.toString(currentFluidAmount) + " L", 45, 91, 0x000000);
             this.fontRendererObj.drawString(
                     StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
         }
@@ -152,9 +154,10 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
     @Override
     public void initGui() {
+
         super.initGui();
         Mouse.getDWheel();
-
+        GuiTabButton craftingStatusBtn;
         this.buttonList.clear();
         this.buttonList.add(new GuiButton(0, this.guiLeft - 30, this.guiTop, 30, 20, "9..1"));
         this.buttonList.add(new GuiButton(1, this.guiLeft - 30, this.guiTop + 20, 30, 20, "1..9"));
@@ -169,14 +172,12 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
                 boolean withinXRange = this.xPosition <= x && x < this.xPosition + this.width;
                 boolean withinYRange = this.yPosition <= y && y < this.yPosition + this.height;
                 boolean flag = withinXRange && withinYRange;
-                if (flag && mouseBtn == 1)
-                    this.setText("");
-                if (flag)
-                    this.setFocused(true);
-                else
-                    this.setFocused(false);
+              
+                if (flag && mouseBtn == 1) this.setText("");
 
-            };
+                if (flag) this.setFocused(true);
+                else this.setFocused(false);
+            }
         };
         this.searchbar.setEnableBackgroundDrawing(false);
         this.searchbar.setMaxStringLength(15);
@@ -202,8 +203,10 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
     @Override
     protected void keyTyped(char key, int keyID) {
+        int mSearch = 0;
         if (keyID == Keyboard.KEY_ESCAPE) this.mc.thePlayer.closeScreen();
         if (!this.searchbar.isFocused() && keyID == Keyboard.KEY_E ) this.mc.thePlayer.closeScreen();
+        if (keyID == Keyboard.KEY_RETURN) this.searchbar.setFocused(false);
         this.searchbar.textboxKeyTyped(key, keyID);
         updateFluids();
     }
