@@ -6,6 +6,7 @@ import extracells.network.ChannelHandler;
 import extracells.registries.BlockEnum;
 import extracells.render.RenderHandler;
 import extracells.tileentity.TileEntityCertusTank;
+import gregtech.api.items.GT_MetaGenerated_Tool;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -143,6 +144,21 @@ public class BlockCertusTank extends BlockEC {
 				worldObj.setBlockToAir(x, y, z);
 				return true;
 			}
+			try {
+				if (current.getItem() instanceof GT_MetaGenerated_Tool
+						&& ((GT_MetaGenerated_Tool) current.getItem()).canWrench(
+						entityplayer, x, y, z)) {
+					dropBlockAsItem(worldObj, x, y, z,
+							getDropWithNBT(worldObj, x, y, z));
+					worldObj.setBlockToAir(x, y, z);
+					((GT_MetaGenerated_Tool) current.getItem()).wrenchUsed(entityplayer,
+							x, y, z);
+					return true;
+				}
+			} catch (Throwable e) {
+				// No GT_MetaGenerated_Tool
+			}
+
 
 		}
 		if (current != null) {
