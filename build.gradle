@@ -52,7 +52,7 @@ buildProps.withReader {
 
 version = "${config.version.extracells}"
 group = "extracells"
-archivesBaseName = "ExtraCells"
+archivesBaseName = "ExtraCells_II-edition"
 def actualVersion = version
 
 logger.lifecycle "$archivesBaseName-$version"
