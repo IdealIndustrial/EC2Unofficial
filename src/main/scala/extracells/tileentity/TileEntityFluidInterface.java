@@ -175,7 +175,7 @@ public class TileEntityFluidInterface extends TileBase implements
 	private ECFluidGridBlock gridBlock;
 	private IGridNode node = null;
 	public FluidTank[] tanks = new FluidTank[6];
-	public Integer[] fluidFilter = new Integer[this.tanks.length];
+	public String[] fluidFilter = new String[this.tanks.length];
 	public boolean doNextUpdate = false;
 	private boolean wasIdle = false;
 	private int tickCount = 0;
@@ -215,7 +215,7 @@ public class TileEntityFluidInterface extends TileBase implements
 					return this;
 				}
 			};
-			this.fluidFilter[i] = -1;
+			this.fluidFilter[i] = "";
 		}
 	}
 
@@ -726,8 +726,8 @@ public class TileEntityFluidInterface extends TileBase implements
 
 	public void readFilter(NBTTagCompound tag) {
 		for (int i = 0; i < this.fluidFilter.length; i++) {
-			if (tag.hasKey("fluid#" + i))
-				this.fluidFilter[i] = tag.getInteger("fluid#" + i);
+			if (tag.hasKey("FilterFluid#" + i))
+				this.fluidFilter[i] = tag.getString("FilterFluid#" + i);
 		}
 	}
 
@@ -737,8 +737,14 @@ public class TileEntityFluidInterface extends TileBase implements
 		for (int i = 0; i < this.tanks.length; i++) {
 			if (tag.hasKey("tank#" + i))
 				this.tanks[i].readFromNBT(tag.getCompoundTag("tank#" + i));
-			if (tag.hasKey("filter#" + i))
-				this.fluidFilter[i] = tag.getInteger("filter#" + i);
+			if (tag.hasKey("filter#" + i)) {
+				if (tag.getInteger("filter#" + i) == -1)
+					this.fluidFilter[i] = "";
+				else
+					this.fluidFilter[i] = FluidRegistry.getFluid(tag.getInteger("filter#" + i)).getName();
+			}
+			if (tag.hasKey("FilterFluid#" + i))
+				this.fluidFilter[i] = tag.getString("FilterFluid#" + i);
 		}
 		if (hasWorldObj()) {
 			IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
@@ -820,11 +826,11 @@ public class TileEntityFluidInterface extends TileBase implements
 		if (side == null || side == ForgeDirection.UNKNOWN)
 			return;
 		if (fluid == null) {
-			this.fluidFilter[side.ordinal()] = -1;
+			this.fluidFilter[side.ordinal()] = "";
 			this.doNextUpdate = true;
 			return;
 		}
-		this.fluidFilter[side.ordinal()] = fluid.getID();
+		this.fluidFilter[side.ordinal()] = fluid.getName();
 		this.doNextUpdate = true;
 	}
 
@@ -960,7 +966,7 @@ public class TileEntityFluidInterface extends TileBase implements
 
 	public NBTTagCompound writeFilter(NBTTagCompound tag) {
 		for (int i = 0; i < this.fluidFilter.length; i++) {
-			tag.setInteger("fluid#" + i, this.fluidFilter[i]);
+			tag.setString("FilterFluid#" + i, this.fluidFilter[i]);
 		}
 		return tag;
 	}
@@ -1015,7 +1021,7 @@ public class TileEntityFluidInterface extends TileBase implements
 		for (int i = 0; i < this.tanks.length; i++) {
 			tag.setTag("tank#" + i,
 					this.tanks[i].writeToNBT(new NBTTagCompound()));
-			tag.setInteger("filter#" + i, this.fluidFilter[i]);
+			tag.setString("FilterFluid#" + i, this.fluidFilter[i]);
 		}
 		if (!hasWorldObj())
 			return;

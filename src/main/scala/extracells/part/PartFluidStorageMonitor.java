@@ -15,6 +15,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AEColor;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.render.TextureManager;
@@ -249,11 +250,17 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		if (data.hasKey("amount"))
 			this.amount = data.getLong("amount");
 		if (data.hasKey("fluid")) {
-			int id = data.getInteger("fluid");
-			if (id == -1)
+			if (data.getInteger("fluid") == -1)
 				this.fluid = null;
 			else
-				this.fluid = FluidRegistry.getFluid(id);
+				this.fluid = FluidRegistry.getFluid(data.getInteger("fluid"));
+		}
+		if (data.hasKey("FilterFluid")) {
+			String Name = data.getString("FilterFluid");
+			if (Name == "")
+				this.fluid = null;
+			else
+				this.fluid = FluidRegistry.getFluid(Name);
 		}
 		if (data.hasKey("locked"))
 			this.locked = data.getBoolean("locked");
@@ -262,13 +269,18 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	@Override
 	public boolean readFromStream(ByteBuf data) throws IOException {
 		super.readFromStream(data);
-		this.amount = data.readLong();
-		int id = data.readInt();
-		if (id == -1)
-			this.fluid = null;
-		else
-			this.fluid = FluidRegistry.getFluid(id);
-		this.locked = data.readBoolean();
+		NBTTagCompound tag = ByteBufUtils.readTag(data);
+		if (tag.hasKey("amount"))
+			this.amount = tag.getInteger("amount");
+		if (tag.hasKey("FilterFluid")){
+			String name = tag.getString("FilterFluid");
+			if (name == "")
+				this.fluid =null;
+			else
+				this.fluid = FluidRegistry.getFluid(name);
+		}
+		if (tag.hasKey("locked"))
+			this.locked = tag.getBoolean("locked");
 		return true;
 	}
 
@@ -498,21 +510,23 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		super.writeToNBT(data);
 		data.setLong("amount", this.amount);
 		if (this.fluid == null)
-			data.setInteger("fluid", -1);
+			data.setString("FilterFluid", "");
 		else
-			data.setInteger("fluid", this.fluid.getID());
+			data.setString("FilterFluid", this.fluid.getName());
 		data.setBoolean("locked", this.locked);
 	}
 
 	@Override
 	public void writeToStream(ByteBuf data) throws IOException {
 		super.writeToStream(data);
-		data.writeLong(this.amount);
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setLong("amount", this.amount);
 		if (this.fluid == null)
-			data.writeInt(-1);
+			tag.setString("FilterFluid", "");
 		else
-			data.writeInt(this.fluid.getID());
-		data.writeBoolean(this.locked);
+			tag.setString("FilterFluid", this.fluid.getName());
+		tag.setBoolean("locked", this.locked);
+		ByteBufUtils.writeTag(data, tag);
 
 	}
 }

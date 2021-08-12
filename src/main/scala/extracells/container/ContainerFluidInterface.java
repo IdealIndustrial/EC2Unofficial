@@ -61,11 +61,11 @@ public class ContainerFluidInterface extends Container implements
 		return true;
 	}
 
-	private int getFluidID(ForgeDirection side) {
+	private String getFluidName(ForgeDirection side) {
 		Fluid fluid = this.fluidInterface.getFilter(side);
 		if (fluid == null)
-			return -1;
-		return fluid.getID();
+			return "";
+		return fluid.getName();
 	}
 
 	@Override
@@ -149,12 +149,12 @@ public class ContainerFluidInterface extends Container implements
 						ForgeDirection.getOrientation(4)).getFluid(),
 				this.fluidInterface.getFluidTank(
 						ForgeDirection.getOrientation(5)).getFluid() },
-				new Integer[] { getFluidID(ForgeDirection.getOrientation(0)),
-						getFluidID(ForgeDirection.getOrientation(1)),
-						getFluidID(ForgeDirection.getOrientation(2)),
-						getFluidID(ForgeDirection.getOrientation(3)),
-						getFluidID(ForgeDirection.getOrientation(4)),
-						getFluidID(ForgeDirection.getOrientation(5)) },
+				new String[] { getFluidName(ForgeDirection.getOrientation(0)),
+						getFluidName(ForgeDirection.getOrientation(1)),
+						getFluidName(ForgeDirection.getOrientation(2)),
+						getFluidName(ForgeDirection.getOrientation(3)),
+						getFluidName(ForgeDirection.getOrientation(4)),
+						getFluidName(ForgeDirection.getOrientation(5)) },
 				this.player).sendPacketToPlayer(this.player);
 
 	}
