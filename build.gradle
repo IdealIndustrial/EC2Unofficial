@@ -1,18 +1,17 @@
 buildscript {
     repositories {
         mavenCentral()
-         maven {
-            name = "gt"
-            url = "https://gregtech.overminddl1.com/"
-        }   
-        maven {
-            name = "MavenRepo"
-            url = "https://repo.maven.apache.org/maven2"
-        }
-
+//        maven {
+//            name = "gt"
+//            url = "https://gregtech.overminddl1.com/"
+//        }
+//        maven {
+//            name = "MavenRepo"
+//            url = "https://repo.maven.apache.org/maven2"
+//        }
         maven {
             name = "forge"
-            url = "https://files.minecraftforge.net/maven"
+            url = "http://files.minecraftforge.net/maven"
         }
         maven {
             name = "sonatype"
@@ -20,28 +19,27 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
+            changing = true
+        }
     }
 }
-
-
 
 
 apply plugin: 'scala'
 apply plugin: 'forge'
 apply plugin: 'idea'
 
-sourceCompatibility = JavaVersion.VERSION_1_6
-targetCompatibility = JavaVersion.VERSION_1_6
-
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 ext.buildProps = file "build.properties"
 
 version = "NIGHTLY"
 if (System.getenv("BUILD_NUMBER") != null) {
-	version = "${System.getenv("BUILD_NUMBER")}"
+    version = "${System.getenv("BUILD_NUMBER")}"
 }
 if (System.getenv("DRONE_BUILD_NUMBER") != null) {
-	version = "${System.getenv("DRONE_BUILD_NUMBER")}"
+    version = "${System.getenv("DRONE_BUILD_NUMBER")}"
 }
 
 buildProps.withReader {
@@ -72,8 +70,8 @@ repositories {
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
     }
-	
-	maven {
+
+    maven {
         name = 'IGW'
         url = "https://maven.k-4u.nl/"
     }
@@ -92,29 +90,30 @@ configurations {
 }
 
 dependencies {
-    provided fileTree(dir: 'libs/', include:'*.jar')
-	/*compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
+    provided fileTree(dir: 'libs/', include: '*.jar')
+    compile fileTree(dir: 'libs/nonruntime/', include: '*.jar')
+    /*compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
         transitive = false
-	}
-	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
+    }
+    compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
         transitive = false
-	}
-	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
+    }
+    compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
-	}*/
-	//compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
+    }*/
+    //compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
     //compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
     //compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
-	//compile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:userdev"
+    //compile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:userdev"
 //
     //compile name: "buildcraft", version: "${config.version.bc}", classifier: "dev", ext: 'jar'
 //
     //compile files("libs/WirelessCraftingTerminal-1.7.10-rv3-1.8.7.4-bigbass-1.jar")
 //
-	//compile files("libs/thaumicenergistics-1.1.3.0.jar")
-	//compile files("libs/OpenComputers-MC1.7.10-1.5.22.46-universal.jar")
-	//compile files("libs/appliedenergistics2-rv3-beta-6.jar")
-	//compile files("libs/Thaumcraft-1.7.10-4.2.3.5.jar.jar")	
+    //compile files("libs/thaumicenergistics-1.1.3.0.jar")
+    //compile files("libs/OpenComputers-MC1.7.10-1.5.22.46-universal.jar")
+    //compile files("libs/appliedenergistics2-rv3-beta-6.jar")
+    //compile files("libs/Thaumcraft-1.7.10-4.2.3.5.jar.jar")
 }
 
 processResources {
@@ -149,8 +148,7 @@ artifacts {
 def getBuildNumber() {
     if (System.getenv("BUILD_NUMBER") != null) {
         return "${System.getenv("BUILD_NUMBER")}"
-    }
-    else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
+    } else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
         return "${System.getenv("DRONE_BUILD_NUMBER")}"
     }
     return "NIGHTLY"
