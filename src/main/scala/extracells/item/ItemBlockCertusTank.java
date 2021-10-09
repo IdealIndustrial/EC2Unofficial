@@ -76,7 +76,7 @@ public class ItemBlockCertusTank extends ItemBlock implements
 
 	@Override
 	public int fill(ItemStack container, FluidStack resource, boolean doFill) {
-		if (resource == null) {
+		if (resource == null || resource.amount == 0) {
 			return 0;
 		}
 
