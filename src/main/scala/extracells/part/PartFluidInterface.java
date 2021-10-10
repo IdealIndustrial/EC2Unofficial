@@ -219,7 +219,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 			return this;
 		}
 	};
-	private int fluidFilter = -1;
+	private String fluidFilter = "";
 	public boolean doNextUpdate = false;
 	private boolean needBreake = false;
 
@@ -734,8 +734,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 	}
 
 	public void readFilter(NBTTagCompound tag) {
-		if (tag.hasKey("filter"))
-			this.fluidFilter = tag.getInteger("filter");
+		if (tag.hasKey("FilterFluid"))
+			this.fluidFilter = tag.getString("FilterFluid");
 	}
 
 	@Override
@@ -743,8 +743,14 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		super.readFromNBT(data);
 		if (data.hasKey("tank"))
 			this.tank.readFromNBT(data.getCompoundTag("tank"));
-		if (data.hasKey("filter"))
-			this.fluidFilter = data.getInteger("filter");
+		if (data.hasKey("filter")) {
+			if (data.getInteger("filter") == -1)
+				this.fluidFilter = "";
+			else
+				this.fluidFilter = FluidRegistry.getFluid(data.getInteger("filter")).getName();
+		}
+		if (data.hasKey("FilterFluid"))
+			this.fluidFilter = data.getString("FilterFluid");
 		if (data.hasKey("inventory"))
 			this.inventory.readFromNBT(data.getCompoundTag("inventory"));
 		if (data.hasKey("export"))
@@ -757,8 +763,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		NBTTagCompound tag = ByteBufUtils.readTag(data);
 		if (tag.hasKey("tank"))
 			this.tank.readFromNBT(tag.getCompoundTag("tank"));
-		if (tag.hasKey("filter"))
-			this.fluidFilter = tag.getInteger("filter");
+		if (tag.hasKey("FilterFluid"))
+			this.fluidFilter = tag.getString("FilterFluid");
 		if (tag.hasKey("inventory"))
 			this.inventory.readFromNBT(tag.getCompoundTag("inventory"));
 		return true;
@@ -887,11 +893,11 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 	@Override
 	public void setFilter(ForgeDirection side, Fluid fluid) {
 		if (fluid == null) {
-			this.fluidFilter = -1;
+			this.fluidFilter = "";
 			this.doNextUpdate = true;
 			return;
 		}
-		this.fluidFilter = fluid.getID();
+		this.fluidFilter = fluid.getName();
 		this.doNextUpdate = true;
 
 	}
@@ -1003,7 +1009,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 	public NBTTagCompound writeFilter(NBTTagCompound tag) {
 		if (FluidRegistry.getFluid(this.fluidFilter) == null)
 			return null;
-		tag.setInteger("filter", this.fluidFilter);
+		tag.setString("FilterFluid", this.fluidFilter);
 		return tag;
 	}
 
@@ -1070,7 +1076,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 	public void writeToNBTWithoutExport(NBTTagCompound data) {
 		super.writeToNBT(data);
 		data.setTag("tank", this.tank.writeToNBT(new NBTTagCompound()));
-		data.setInteger("filter", this.fluidFilter);
+		data.setString("FilterFluid", this.fluidFilter);
 		NBTTagCompound inventory = new NBTTagCompound();
 		this.inventory.writeToNBT(inventory);
 		data.setTag("inventory", inventory);
@@ -1081,7 +1087,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		super.writeToStream(data);
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setTag("tank", this.tank.writeToNBT(new NBTTagCompound()));
-		tag.setInteger("filter", this.fluidFilter);
+		tag.setString("FilterFluid", this.fluidFilter);
 		NBTTagCompound inventory = new NBTTagCompound();
 		this.inventory.writeToNBT(inventory);
 		tag.setTag("inventory", inventory);

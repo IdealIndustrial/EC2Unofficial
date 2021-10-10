@@ -17,13 +17,13 @@ import net.minecraftforge.fluids.FluidStack;
 public class PacketFluidInterface extends AbstractPacket {
 
 	FluidStack[] tank;
-	Integer[] filter;
-	int fluidID;
+	String[] filter;
+	String fluidName;
 	int filterSlot;
 
 	public PacketFluidInterface() {}
 
-	public PacketFluidInterface(FluidStack[] _tank, Integer[] _filter,
+	public PacketFluidInterface(FluidStack[] _tank, String[] _filter,
 			EntityPlayer _player) {
 		super(_player);
 		this.mode = 0;
@@ -31,11 +31,11 @@ public class PacketFluidInterface extends AbstractPacket {
 		this.filter = _filter;
 	}
 
-	public PacketFluidInterface(int _fluidID, int _filterSlot,
+	public PacketFluidInterface(String _fluidName, int _filterSlot,
 			EntityPlayer _player) {
 		super(_player);
 		this.mode = 1;
-		this.fluidID = _fluidID;
+		this.fluidName = _fluidName;
 		this.filterSlot = _filterSlot;
 	}
 
@@ -51,7 +51,7 @@ public class PacketFluidInterface extends AbstractPacket {
 				ContainerFluidInterface container = (ContainerFluidInterface) this.player.openContainer;
 				container.fluidInterface.setFilter(
 						ForgeDirection.getOrientation(this.filterSlot),
-						FluidRegistry.getFluid(this.fluidID));
+						FluidRegistry.getFluid(this.fluidName));
 			}
 			break;
 		default:
@@ -95,17 +95,17 @@ public class PacketFluidInterface extends AbstractPacket {
 				else
 					this.tank[i] = null;
 			}
-			this.filter = new Integer[tag.getInteger("lengthFilter")];
+			this.filter = new String[tag.getInteger("lengthFilter")];
 			for (int i = 0; i < this.filter.length; i++) {
-				if (tag.hasKey("filter#" + i))
-					this.filter[i] = tag.getInteger("filter#" + i);
+				if (tag.hasKey("FilterFluid#" + i))
+					this.filter[i] = tag.getString("FilterFluid#" + i);
 				else
-					this.filter[i] = -1;
+					this.filter[i] = "";
 			}
 			break;
 		case 1:
 			this.filterSlot = in.readInt();
-			this.fluidID = in.readInt();
+			this.fluidName = readString(in);
 			break;
 		default:
 		}
@@ -127,14 +127,14 @@ public class PacketFluidInterface extends AbstractPacket {
 			tag.setInteger("lengthFilter", this.filter.length);
 			for (int i = 0; i < this.filter.length; i++) {
 				if (this.filter[i] != null) {
-					tag.setInteger("filter#" + i, this.filter[i]);
+					tag.setString("FilterFluid#" + i, this.filter[i]);
 				}
 			}
 			ByteBufUtils.writeTag(out, tag);
 			break;
 		case 1:
 			out.writeInt(this.filterSlot);
-			out.writeInt(this.fluidID);
+			writeString(this.fluidName, out);
 			break;
 		default:
 		}
