@@ -156,10 +156,10 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         Mouse.getDWheel();
 
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(0, this.guiLeft - 30, this.guiTop, 30, 20, "9..1"));
-        this.buttonList.add(new GuiButton(1, this.guiLeft - 30, this.guiTop + 20, 30, 20, "1..9"));
-        this.buttonList.add(new GuiButton(2, this.guiLeft - 30, this.guiTop + 40, 30, 20, "A..z"));
-        this.buttonList.add(new GuiButton(3, this.guiLeft - 30, this.guiTop + 60, 30, 20, "z..A"));
+        this.buttonList.add(new GuiButton(0, this.guiLeft - 30, this.guiTop, 30, 20, "A..z"));
+        this.buttonList.add(new GuiButton(1, this.guiLeft - 30, this.guiTop + 20, 30, 20, "z..A"));
+        this.buttonList.add(new GuiButton(2, this.guiLeft - 30, this.guiTop + 40, 30, 20, "1..9"));
+        this.buttonList.add(new GuiButton(3, this.guiLeft - 30, this.guiTop + 60, 30, 20, "9..1"));	
 
         updateFluids();
         this.searchbar = new GuiTextField(this.fontRendererObj,
