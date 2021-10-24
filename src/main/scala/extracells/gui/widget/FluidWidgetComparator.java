@@ -23,15 +23,15 @@ public class FluidWidgetComparator implements Comparator<AbstractFluidWidget> {
 	public int compare(AbstractFluidWidget o1, AbstractFluidWidget o2) {
 		switch(this.sortingOrder) {
 		case 0:
-			return ((Long)(((WidgetFluidSelector)o2).getAmount())).compareTo(((WidgetFluidSelector)o1).getAmount());
-		case 1:
-			return ((Long)(((WidgetFluidSelector)o1).getAmount())).compareTo(((WidgetFluidSelector)o2).getAmount());
-		case 2:
 			return o1.getFluid().getLocalizedName(new FluidStack(o1.getFluid(), 0))
-					.compareTo(o2.getFluid().getLocalizedName(new FluidStack(o2.getFluid(), 0)));
-		case 3:
+				.compareTo(o2.getFluid().getLocalizedName(new FluidStack(o2.getFluid(), 0)));
+		case 1:
 			return o2.getFluid().getLocalizedName(new FluidStack(o2.getFluid(), 0))
 					.compareTo(o1.getFluid().getLocalizedName(new FluidStack(o1.getFluid(), 0)));
+		case 2:
+			return ((Long)(((WidgetFluidSelector)o1).getAmount())).compareTo(((WidgetFluidSelector)o2).getAmount());
+		case 3:
+			return ((Long)(((WidgetFluidSelector)o2).getAmount())).compareTo(((WidgetFluidSelector)o1).getAmount());
 		}
 	return 0;
 	}
