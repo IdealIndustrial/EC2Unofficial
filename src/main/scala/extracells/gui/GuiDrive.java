@@ -1,24 +1,30 @@
 package extracells.gui;
 
+import appeng.client.gui.widgets.GuiTabButton;
+import appeng.core.localization.GuiText;
 import extracells.container.ContainerDrive;
 import extracells.network.packet.part.PacketFluidStorage;
 import extracells.part.PartDrive;
+import extracells.network.packet.other.PacketGuiSwitch;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GuiDrive extends GuiContainer {
+public class GuiDrive extends ECGuiContainer {
 
 	private EntityPlayer player;
 	private ResourceLocation guiTexture = new ResourceLocation("extracells",
 			"textures/gui/drive.png");
+	private final PartDrive part;
+	private GuiTabButton priority;
 
 	public GuiDrive(PartDrive _part, EntityPlayer _player) {
 		super(new ContainerDrive(_part, _player));
 		this.player = _player;
+		this.part = _part;
 		this.xSize = 176;
 		this.ySize = 163;
 		new PacketFluidStorage(this.player).sendPacketToServer();
@@ -50,5 +56,21 @@ public class GuiDrive extends GuiContainer {
 			GL11.glEnable(GL11.GL_LIGHTING);
 
 		}
+	}
+
+	@Override
+	public void actionPerformed(GuiButton button) {
+		super.actionPerformed(button);
+
+		if (button == this.priority) {
+			new PacketGuiSwitch(100 + part.getSide().ordinal(), part.getHostTile()).sendPacketToServer();
+		}
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+		this.priority = new GuiTabButton(this.guiLeft + 154, this.guiTop - 18, 2 + 4 * 16, GuiText.Priority.getLocal(), itemRender);
+		this.buttonList.add(priority);
 	}
 }

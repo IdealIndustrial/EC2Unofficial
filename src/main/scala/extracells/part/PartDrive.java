@@ -13,6 +13,8 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.*;
+import appeng.me.storage.MEInventoryHandler;
+import appeng.helpers.IPriorityHost;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerDrive;
@@ -36,10 +38,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartDrive extends PartECBase implements ICellContainer,
-		IInventoryUpdateReceiver {
+public class PartDrive extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IPriorityHost {
 
-	private int priority = 0; // TODO
+	private int priority = 0;
 	private short[] blinkTimers; // TODO
 	private byte[] cellStatuses = new byte[6];
 	List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();
@@ -124,6 +125,12 @@ public class PartDrive extends PartECBase implements ICellContainer,
 	}
 
 	@Override
+	public void setPriority(int newValue) {
+		this.priority = newValue;
+		this.onInventoryChanged();
+	}
+
+	@Override
 	public Object getServerGuiElement(EntityPlayer player) {
 		return new ContainerDrive(this, player);
 	}
@@ -192,6 +199,7 @@ public class PartDrive extends PartECBase implements ICellContainer,
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
 		this.inventory.readFromNBT(data.getTagList("inventory", 10));
+		this.priority = data.getInteger("priority");
 		onInventoryChanged();
 	}
 
@@ -298,8 +306,11 @@ public class PartDrive extends PartECBase implements ICellContainer,
 			if (cellRegistry.isCellHandled(cell)) {
 				IMEInventoryHandler cellInventory = cellRegistry
 						.getCellInventory(cell, null, channel);
-				if (cellInventory != null)
-					handlers.add(cellInventory);
+				if (cellInventory != null) {
+					final MEInventoryHandler ih = new MEInventoryHandler(cellInventory, cellInventory.getChannel());
+					ih.setPriority(this.priority);
+					handlers.add(ih);
+				}
 			}
 		}
 		return handlers;
@@ -309,6 +320,7 @@ public class PartDrive extends PartECBase implements ICellContainer,
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
 		data.setTag("inventory", this.inventory.writeToNBT());
+		data.setInteger("priority", this.priority);
 	}
 
 	@Override

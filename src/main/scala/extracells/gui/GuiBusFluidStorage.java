@@ -2,19 +2,21 @@ package extracells.gui;
 
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
+import appeng.client.gui.widgets.GuiTabButton;
+import appeng.core.localization.GuiText;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.widget.WidgetStorageDirection;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketBusFluidStorage;
+import extracells.network.packet.other.PacketGuiSwitch;
 import extracells.part.PartFluidStorage;
 import extracells.part.PartGasStorage;
 import extracells.util.FluidUtil;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -26,7 +28,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiBusFluidStorage extends GuiContainer implements
+public class GuiBusFluidStorage extends ECGuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/storagebusfluid.png");
@@ -35,6 +37,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 	private boolean hasNetworkTool;
 	private final PartFluidStorage part;
+	private GuiTabButton priority;
 
 	public GuiBusFluidStorage(PartFluidStorage _part, EntityPlayer _player) {
 		super(new ContainerBusFluidStorage(_part, _player));
@@ -44,15 +47,14 @@ public class GuiBusFluidStorage extends GuiContainer implements
 
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 6; j++) {
-				this.fluidSlotList.add(new WidgetFluidSlot(this.player, part, i * 6 + j, 18 * i + 7, 18 * j + 17));
+				this.fluidSlotList.add(new WidgetFluidSlot(this.player, part, i * 6 + j, 18 * i + 7, 18 * j + 30));
 			}
 		}
 
 		new PacketBusFluidStorage(this.player, part).sendPacketToServer();
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;
 		this.xSize = this.hasNetworkTool ? 246 : 211;
-		this.ySize = 222;
-
+		this.ySize = 235;
 	}
 
 	@Override
@@ -76,6 +78,9 @@ public class GuiBusFluidStorage extends GuiContainer implements
 				break;
 			}
 		}
+		else if (button == this.priority) {
+			new PacketGuiSwitch(100 + part.getSide().ordinal(), part.getHostTile()).sendPacketToServer();
+		}
 	}
 
 	public void changeConfig(byte _filterSize) {
@@ -86,7 +91,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 	protected void drawGuiContainerBackgroundLayer(float alpha, int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
-		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 222);
+		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 235);
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
 		if (this.hasNetworkTool)
 			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
@@ -138,6 +143,8 @@ public class GuiBusFluidStorage extends GuiContainer implements
 	@Override
 	public void initGui() {
 		super.initGui();
+		this.priority = new GuiTabButton(this.guiLeft + 154, this.guiTop, 2 + 4 * 16, GuiText.Priority.getLocal(), itemRender);
+		this.buttonList.add(priority);
 		this.buttonList.add(new WidgetStorageDirection(0, this.guiLeft - 18, this.guiTop, 16, 16, AccessRestriction.READ_WRITE));
 	}
 
