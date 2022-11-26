@@ -16,6 +16,7 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+import appeng.helpers.IPriorityHost;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidStorage;
@@ -45,7 +46,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
+public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock, IPriorityHost {
 
 	private HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
 	private int priority = 0;
@@ -120,6 +121,12 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	@Override
 	public int getPriority() {
 		return this.priority;
+	}
+
+	@Override
+	public void setPriority(int newValue) {
+		this.priority = newValue;
+		this.onNeighborChanged();
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.PacketValueConfig;
 import appeng.helpers.IPriorityHost;
 import extracells.network.packet.other.PacketGuiSwitch;
+import extracells.part.PartFluidStorage;
 import extracells.part.PartDrive;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
@@ -66,15 +67,18 @@ public class GuiECPriority extends AEBaseGui {
 		ItemStack myIcon = null;
 		final Object target = ( (AEBaseContainer) this.inventorySlots ).getTarget();
 
-		if (target instanceof PartDrive)
-		{
+		if (target instanceof PartDrive) {
 			te = ((PartDrive) target).getHostTile();
 			myIcon = ItemEnum.PARTITEM.getDamagedStack(PartEnum.DRIVE.ordinal());
 			this.OriginalGui = ((PartDrive) target).getSide().ordinal();
 		}
+		else if (target instanceof PartFluidStorage) {
+			te = ((PartFluidStorage) target).getHostTile();
+			myIcon = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDSTORAGE.ordinal());
+			this.OriginalGui = ((PartFluidStorage) target).getSide().ordinal();
+		}
 
-		if( this.OriginalGui != -1 && myIcon != null )
-		{
+		if( this.OriginalGui != -1 && myIcon != null ) {
 			this.buttonList.add( this.originalGuiBtn = new GuiTabButton( this.guiLeft + 154, this.guiTop, myIcon, myIcon.getDisplayName(), itemRender ) );
 		}
 
@@ -104,39 +108,33 @@ public class GuiECPriority extends AEBaseGui {
 	protected void actionPerformed( final GuiButton btn ) {
 		super.actionPerformed( btn );
 
-		if( btn == this.originalGuiBtn )
-		{
+		if( btn == this.originalGuiBtn ) {
 			new PacketGuiSwitch(OriginalGui, te).sendPacketToServer();
 		}
 
 		final boolean isPlus = btn == this.plus1 || btn == this.plus10 || btn == this.plus100 || btn == this.plus1000;
 		final boolean isMinus = btn == this.minus1 || btn == this.minus10 || btn == this.minus100 || btn == this.minus1000;
 
-		if( isPlus || isMinus )
-		{
+		if( isPlus || isMinus ) {
 			this.addQty( this.getQty( btn ) );
 		}
 	}
 
 	private void addQty( final int i ) {
-		try
-		{
+		try {
 			String out = this.priority.getText();
 
 			boolean fixed = false;
-			while( out.startsWith( "0" ) && out.length() > 1 )
-			{
+			while( out.startsWith( "0" ) && out.length() > 1 ) {
 				out = out.substring( 1 );
 				fixed = true;
 			}
 
-			if( fixed )
-			{
+			if( fixed ) {
 				this.priority.setText( out );
 			}
 
-			if( out.isEmpty() )
-			{
+			if( out.isEmpty() ) {
 				out = "0";
 			}
 
@@ -147,52 +145,42 @@ public class GuiECPriority extends AEBaseGui {
 
 			NetworkHandler.instance.sendToServer( new PacketValueConfig( "PriorityHost.Priority", out ) );
 		}
-		catch( final NumberFormatException e )
-		{
+		catch( final NumberFormatException e ) {
 			this.priority.setText( "0" );
 		}
-		catch( final IOException e )
-		{
+		catch( final IOException e ) {
 			AELog.debug( e );
 		}
 	}
 
 	@Override
 	protected void keyTyped( final char character, final int key ) {
-		if( !this.checkHotbarKeys( key ) )
-		{
-			if( ( key == 211 || key == 205 || key == 203 || key == 14 || character == '-' || Character.isDigit( character ) ) && this.priority.textboxKeyTyped( character, key ) )
-			{
-				try
-				{
+		if( !this.checkHotbarKeys( key ) ) {
+			if( ( key == 211 || key == 205 || key == 203 || key == 14 || character == '-' || Character.isDigit( character ) ) && this.priority.textboxKeyTyped( character, key ) ) {
+				try {
 					String out = this.priority.getText();
 
 					boolean fixed = false;
-					while( out.startsWith( "0" ) && out.length() > 1 )
-					{
+					while( out.startsWith( "0" ) && out.length() > 1 ) {
 						out = out.substring( 1 );
 						fixed = true;
 					}
 
-					if( fixed )
-					{
+					if( fixed ) {
 						this.priority.setText( out );
 					}
 
-					if( out.isEmpty() )
-					{
+					if( out.isEmpty() ) {
 						out = "0";
 					}
 
 					NetworkHandler.instance.sendToServer( new PacketValueConfig( "PriorityHost.Priority", out ) );
 				}
-				catch( final IOException e )
-				{
+				catch( final IOException e ) {
 					AELog.debug( e );
 				}
 			}
-			else
-			{
+			else {
 				super.keyTyped( character, key );
 			}
 		}
